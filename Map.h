@@ -1,8 +1,8 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
-typedef enum{ FLOOR, WALL, SLOPE } TileGeometry;
-typedef enum{ NORTH, SOUTH, EAST, WEST } TileOrientation;
+typedef enum{ EMPTY, FLOOR, WALL, SLOPE } TileGeometry;
+typedef enum{ NONE, NORTH, SOUTH, EAST, WEST } TileOrientation;
 
 typedef struct
 {
@@ -36,11 +36,15 @@ Map* createMap();
 
 int setMapSize(Map* map, int width, int height);
 
-int setMapTile(Map* map, int x, int y, int z, Tile tile);
+int setMapTile(Map* map, int x, int y, int z, Tile* tile);
 
-Tile* getMapTile(Map* map, int x, int y, int z);
+int setMapTileStackSize(Map* map, int x, int y, int size);
 
-int isInsideMap(Map* map, int x, int y);
+Tile* getMapTile(const Map* map, int x, int y, int z);
+
+int isInsideMap(const Map* map, int x, int y);
+
+void clearMap(Map* map);
 
 void destroyMap(Map* map);
 
