@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h> /* memcpy */
 
 #include "Map.h"
 
@@ -29,9 +30,21 @@ int setMapSize(Map* map, int width, int height)
 
 int setMapTile(Map* map, int x, int y, int z, Tile tile)
 {
-	if (map != NULL)
+	if (isInsideMap(map, x, y) && z >= 0)
 	{
-
+		if (z >= map->tiles[x][y].altitude)
+		{
+			Tile* stack = malloc(z * sizeof(Tile));
+			if (stack != NULL)
+			{
+				memcpy(stack, map->tiles[x][y].stack, map->tiles[x][y].altitude * sizeof(Tile));
+				free(map->tiles[x][y].stack);
+				map->tiles[x][y].stack = stack;
+			}
+			else
+				return 0;
+		}
+		map->tiles[x][y].stack[z] = tile;
 	}
 	return 0;
 }
@@ -42,7 +55,7 @@ Tile* getMapTile(Map* map, int x, int y, int z)
 	{
 		if (z >= 0 && z < map->tiles[x][y].altitude)
 		{
-			return map->tiles[x][y].stack[z];
+			return &map->tiles[x][y].stack[z];
 		}
 	}
 	return NULL;
@@ -73,4 +86,5 @@ void destroyMap(Map* map)
 		}
 		free(map->tiles);
 	}
+	free(map);
 }
