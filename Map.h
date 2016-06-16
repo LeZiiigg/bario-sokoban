@@ -40,6 +40,8 @@ int setMapTile(Map* map, int x, int y, int z, Tile tile);
 
 Tile* getMapTile(Map* map, int x, int y, int z);
 
+int isInsideMap(Map* map, int x, int y);
+
 void destroyMap(Map* map);
 
 #endif /* __MAP_H__ */
