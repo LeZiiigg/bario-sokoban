@@ -21,11 +21,13 @@ int setMapSize(Map* map, int width, int height)
 	int x, y;
 	if (map != NULL)
 	{
-		Map old = *map;
+		TileStack** old_tiles = map->tiles;
+		int old_width = map->width;
+		int old_height = map->height;
+
 		map->tiles = malloc(width * sizeof(TileStack*));
 		map->width = width;
 		map->height = height;
-
 		if (map->tiles == NULL)
 			goto tiles_bad_alloc;
 
@@ -44,23 +46,31 @@ int setMapSize(Map* map, int width, int height)
 				}
 				else
 				{
-					map->tiles[x][y].stack = NULL;
-					map->tiles[x][y].altitude = 0;
+					map->tiles[x][y] = (TileStack) {.stack = NULL, .altitude = 0};
 				}
 			}
 		}
 		clearMap(&old);
 		return 1;
 
-tiles_x_bad_alloc:
-		for (x--; x >= 0; x--)
+		/* Exceptions */
+
+		for (x = width - 1; x >= 0; x--)
 		{
+			for (y = height - 1; y >= 0; y--)
+			{
+				old.tiles[x][y].stack = map->tiles[x][y].stack;
+			}
 			free(map->tiles[x]);
+tiles_x_bad_alloc:
+			;
 		}
 		free(map->tiles);
 
 tiles_bad_alloc:
-		*map = old;
+		map->tiles = old_tiles;
+		map->width = old_width;
+		map->height = old_height;
 	}
 	return 0;
 }
@@ -71,7 +81,8 @@ int setMapTile(Map* map, int x, int y, int z, Tile* tile)
 	{
 		if (z >= map->tiles[x][y].altitude)
 		{
-			setMapTileStackSize(map, x, y, z + 1);
+			if (!setMapTileStackSize(map, x, y, z + 1))
+				return 0;
 		}
 		map->tiles[x][y].stack[z] = *tile;
 		return 1;
@@ -87,25 +98,21 @@ int setMapTileStackSize(Map* map, int x, int y, int size)
 		TileStack old = map->tiles[x][y];
 		map->tiles[x][y].stack = malloc(size * sizeof(Tile));
 		map->tiles[x][y].altitude = size;
-
 		if (map->tiles[x][y].stack == NULL)
 			goto stack_bad_alloc;
 
 		for (z = 0; z < size; z++)
 		{
 			if (z < old.altitude)
-			{
 				map->tiles[x][y].stack[z] = old.stack[z];
-			}
 			else
-			{
-				map->tiles[x][y].stack[z].geometry = EMPTY;
-				map->tiles[x][y].stack[z].orientation = NONE;
-				map->tiles[x][y].stack[z].view = NULL;
-			}
+				map->tiles[x][y].stack[z] = (Tile) {.geometry = EMPTY, .orientation = NONE, .view = NULL};
 		}
+
 		free(old.stack);
 		return 1;
+
+		/* Exceptions */
 
 stack_bad_alloc:
 		map->tiles[x][y] = old;
