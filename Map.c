@@ -21,10 +21,7 @@ int setMapSize(Map* map, int width, int height)
 	int x, y;
 	if (map != NULL)
 	{
-		TileStack** old_tiles = map->tiles;
-		int old_width = map->width;
-		int old_height = map->height;
-
+		Map old = *map;
 		map->tiles = malloc(width * sizeof(TileStack*));
 		map->width = width;
 		map->height = height;
@@ -68,9 +65,7 @@ tiles_x_bad_alloc:
 		free(map->tiles);
 
 tiles_bad_alloc:
-		map->tiles = old_tiles;
-		map->width = old_width;
-		map->height = old_height;
+		*map = old;
 	}
 	return 0;
 }
@@ -106,7 +101,7 @@ int setMapTileStackSize(Map* map, int x, int y, int size)
 			if (z < old.altitude)
 				map->tiles[x][y].stack[z] = old.stack[z];
 			else
-				map->tiles[x][y].stack[z] = (Tile) {.geometry = EMPTY, .orientation = NONE, .view = NULL};
+				map->tiles[x][y].stack[z] = (Tile) {.geometry = TILE_EMPTY, .orientation = TILE_NONE, .view = NULL};
 		}
 
 		free(old.stack);

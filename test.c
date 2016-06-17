@@ -16,13 +16,13 @@ void printMap(Map* map)
 				Tile* t = getMapTile(map, x, y, z);
 				switch (t->geometry)
 				{
-				case FLOOR:
+				case TILE_FLOOR:
 					c = '.';
 					break;
-				case WALL:
+				case TILE_WALL:
 					c = '#';
 					break;
-				case SLOPE:
+				case TILE_SLOPE:
 					c = '/';
 					break;
 				default:
@@ -39,7 +39,7 @@ void printMap(Map* map)
 int main(int argc, char* argv[])
 {
 	Map* m = createMap();
-	Tile f = {FLOOR, NONE, NULL}, w = {WALL, NONE, NULL};
+	Tile f = {TILE_FLOOR, TILE_NONE}, w = {TILE_WALL, TILE_NONE};
 	int x, y;
 
 	setMapSize(m, 4, 4);
