@@ -31,3 +31,11 @@
 # Debug files
 *.dSYM/
 *.su
+
+# Codeblocks files
+*.cbp
+*.depend
+*.layout
+
+# Junk files
+./Junk/*
