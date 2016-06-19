@@ -31,7 +31,7 @@ int resizeArray(void* array, size_t length, size_t new_length, size_t size, void
 	void* new_array;
 	int i, i_max;
 
-	if (array == NULL || *((void**)array) == NULL)
+	if (array == NULL)
 		goto exception_array_null;
 
 	new_array = malloc(new_length * size);
