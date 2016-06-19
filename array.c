@@ -29,31 +29,39 @@ exception_array_bad_alloc:
 int resizeArray(void* array, size_t length, size_t new_length, size_t size, void* zero, void (*destruct)(void* elem))
 {
 	void* new_array;
-	int i, i_max;
-
 	if (array == NULL)
 		goto exception_array_null;
 
-	new_array = malloc(new_length * size);
+	new_array = createArray(new_length, size, NULL);
 	if (new_array == NULL)
 		goto exception_new_array_bad_alloc;
 
-	i_max = ((new_length > length && zero != NULL) || (new_length < length && destruct == NULL)) ? new_length : length;
-	for (i = 0; i < i_max; i++)
-	{
-		if (i < new_length && i < length)
-			memcpy((char*)new_array + i * size, *((char**)array) + i * size, size);
-		else if (i >= length)
-			memcpy((char*)new_array + i * size, zero, size);
-		else if (i >= new_length)
-			(*destruct)(*((char**)array) + i * size);
-	}
+	getIntoArray(*((void**)array), length, new_array, new_length, size, zero, destruct);
 	*((void**)array) = new_array;
 	return 1;
 
 exception_new_array_bad_alloc:
 exception_array_null:
 	return 0;
+}
+
+void getIntoArray(void* src_array, size_t src_length, void* dst_array, size_t dst_length, size_t size, void* zero, void (*destruct)(void*))
+{
+	int i, i_max;
+	if (dst_length > src_length)
+		i_max = (zero != NULL) ? dst_length : src_length;
+	else
+		i_max = (destruct != NULL) ? src_length : dst_length;
+	for (i = 0; i < i_max; i++)
+	{
+		if (i < src_length && i < dst_length)
+			memcpy((char*)dst_array + i * size, (char*)src_array + i * size, size);
+		else if (i >= src_length)
+			memcpy((char*)dst_array + i * size, zero, size);
+		else if (i >= dst_length)
+			(*destruct)((char*)src_array + i * size);
+	}
+	free(*(void**)src_array);
 }
 
 void destroyArray(void* array, size_t length, size_t size, void (*destruct)(void* elem))
