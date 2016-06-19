@@ -5,8 +5,8 @@
 
 void* createArray(size_t length, size_t size, void* zero);
 
-int resizeArray(void* array, size_t length, size_t new_length, size_t size, void* zero, void (*destruct)(void* elem));
+int resizeArray(void* array, size_t length, size_t new_length, size_t size, void* zero, void (*destruct)(void*));
 
-void destroyArray(void* array, size_t length, size_t size, void (*destruct)(void* elem));
+void destroyArray(void* array, size_t length, size_t size, void (*destruct)(void*));
 
 #endif /* __ARRAY_H__ */
