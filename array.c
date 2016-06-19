@@ -4,20 +4,20 @@
 
 #include "array.h"
 
-void* createArray(size_t array_length, size_t elem_size, void* elem_zero)
+void* createArray(size_t length, size_t size, void* zero)
 {
 	void* array;
 	int i;
 
-	array = malloc(array_length * elem_size);
+	array = malloc(length * size);
 	if (array == NULL)
 		goto exception_array_bad_alloc;
 
-	if (elem_zero != NULL)
+	if (zero != NULL)
 	{
-		for (i = 0; i < array_length; i++)
+		for (i = 0; i < length; i++)
 		{
-			memcpy((char*)array + i * elem_size, elem_zero, elem_size);
+			memcpy((char*)array + i * size, zero, size);
 		}
 	}
 	return array;
@@ -26,26 +26,27 @@ exception_array_bad_alloc:
 	return NULL;
 }
 
-int resizeArray(void* array, size_t array_length, size_t new_array_length, size_t elem_size, void* elem_zero, void (*elem_free)(void* elem))
+int resizeArray(void* array, size_t length, size_t new_length, size_t size, void* zero, void (*destruct)(void* elem))
 {
 	void* new_array;
-	int i;
+	int i, i_max;
 
 	if (array == NULL || *((void**)array) == NULL)
 		goto exception_array_null;
 
-	new_array = malloc(new_array_length * elem_size);
+	new_array = malloc(new_length * size);
 	if (new_array == NULL)
 		goto exception_new_array_bad_alloc;
 
-	for (i = 0; i < ((new_array_length > array_length && elem_zero != NULL) ? new_array_length : array_length); i++)
+	i_max = ((new_length > length && zero != NULL) || (new_length < length && destruct == NULL)) ? new_length : length;
+	for (i = 0; i < i_max; i++)
 	{
-		if (i < new_array_length && i < array_length)
-			memcpy((char*)new_array + i * elem_size, *((char**)array) + i * elem_size, elem_size);
-		else if (i >= array_length && elem_zero != NULL)
-			memcpy((char*)new_array + i * elem_size, elem_zero, elem_size);
-		else if (i >= new_array_length)
-			(*elem_free)(*((char**)array) + i * elem_size);
+		if (i < new_length && i < length)
+			memcpy((char*)new_array + i * size, *((char**)array) + i * size, size);
+		else if (i >= length)
+			memcpy((char*)new_array + i * size, zero, size);
+		else if (i >= new_length)
+			(*destruct)(*((char**)array) + i * size);
 	}
 	*((void**)array) = new_array;
 	return 1;
@@ -55,16 +56,16 @@ exception_array_null:
 	return 0;
 }
 
-void destroyArray(void* array, size_t array_length, size_t elem_size, void (*elem_free)(void* elem))
+void destroyArray(void* array, size_t length, size_t size, void (*destruct)(void* elem))
 {
 	int i;
 	if (array != NULL)
 	{
-		if (elem_free != NULL)
+		if (destruct != NULL)
 		{
-			for (i = 0; i < array_length; i++)
+			for (i = 0; i < length; i++)
 			{
-				(*elem_free)((char*)array + i * elem_size);
+				(*destruct)((char*)array + i * size);
 			}
 		}
 		free(array);
