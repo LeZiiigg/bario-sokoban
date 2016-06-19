@@ -3,11 +3,11 @@
 
 #include <stddef.h>
 
-void* create_matrix(size_t width, size_t height, size_t size, void* zero);
+void* matrix_create(size_t width, size_t height, size_t size, void* zero);
 
-int resize_matrix(void* matrix, size_t width, size_t height, size_t new_width, size_t new_height, size_t size, void* zero, void (*destruct)(void*));
+int matrix_resize(void* matrix, size_t width, size_t height, size_t new_width, size_t new_height, size_t size, void* zero, void (*destruct)(void*));
 
-void destroy_matrix(void* matrix, size_t width, size_t height, size_t size, void (*destruct)(void*));
+void matrix_destroy(void* matrix, size_t width, size_t height, size_t size, void (*destruct)(void*));
 
 #endif /* __MATRIX_H__ */
 

@@ -7,11 +7,11 @@
 
 void printMap(Map* map);
 
-void printIntArray(int* array, int length);
+void print_int_array(int* array, int length);
 
-void printIntMatrix(int** matrix, int width, int height);
+void print_int_matrix(int** matrix, int width, int height);
 
-void freeInt(void* elem);
+void free_int(void* elem);
 
 int main(int argc, char* argv[])
 {
@@ -21,36 +21,36 @@ int main(int argc, char* argv[])
 
 	printf("\nArray tests\n\n");
 
-	array = create_array(10, sizeof(int), &none);
-	printIntArray(array, 10);
+	array = array_create(10, sizeof(int), &none);
+	print_int_array(array, 10);
 
 	for (i = 0; i < 10; i++)
 		array[i] = i;
-	printIntArray(array, 10);
+	print_int_array(array, 10);
 
-	resize_array(&array, 10, 6, sizeof(int), &none, &freeInt);
-	printIntArray(array, 6);
+	array_resize(&array, 10, 6, sizeof(int), &none, &free_int);
+	print_int_array(array, 6);
 
-	resize_array(&array, 6, 10, sizeof(int), NULL, &freeInt);
-	printIntArray(array, 10);
+	array_resize(&array, 6, 10, sizeof(int), NULL, &free_int);
+	print_int_array(array, 10);
 
 	printf("\nMatrix tests\n\n");
 
-	matrix = create_matrix(4, 4, sizeof(int), &none);
-	printIntMatrix(matrix, 4, 4);
+	matrix = matrix_create(4, 4, sizeof(int), &none);
+	print_int_matrix(matrix, 4, 4);
 
 	for (i = 0; i < 16; i++)
 		matrix[i%4][i/4] = i;
-	printIntMatrix(matrix, 4, 4);
+	print_int_matrix(matrix, 4, 4);
 
-	resize_matrix(&matrix, 4, 4, 6, 3, sizeof(int), &none, freeInt);
-	printIntMatrix(matrix, 6, 3);
+	matrix_resize(&matrix, 4, 4, 6, 3, sizeof(int), &none, free_int);
+	print_int_matrix(matrix, 6, 3);
 
-	resize_matrix(&matrix, 6, 3, 2, 5, sizeof(int), NULL, freeInt);
-	printIntMatrix(matrix, 2, 5);
+	matrix_resize(&matrix, 6, 3, 2, 5, sizeof(int), NULL, free_int);
+	print_int_matrix(matrix, 2, 5);
 
-	destroy_array(array, 10, sizeof(int), NULL);
-	destroy_matrix(matrix, 2, 5, sizeof(int), NULL);
+	array_destroy(array, 10, sizeof(int), NULL);
+	matrix_destroy(matrix, 2, 5, sizeof(int), NULL);
 
 	/*
 	Map* m = createMap();
@@ -107,7 +107,7 @@ void printMap(Map* map)
 	printf("\n");
 }
 
-void printIntArray(int* array, int length)
+void print_int_array(int* array, int length)
 {
 	int i;
 	printf("%p\t{", array);
@@ -120,7 +120,7 @@ void printIntArray(int* array, int length)
 	printf("}\n");
 }
 
-void printIntMatrix(int** matrix, int width, int height)
+void print_int_matrix(int** matrix, int width, int height)
 {
 	int i, j;
 	printf("%p\n", matrix);
@@ -134,7 +134,7 @@ void printIntMatrix(int** matrix, int width, int height)
 	}
 }
 
-void freeInt(void* elem)
+void free_int(void* integer)
 {
-	printf("free(%d)\n", *((int*)elem));
+	printf("free(%d)\n", *((int*)integer));
 }

@@ -4,21 +4,21 @@
 
 #include "array.h"
 
-void* create_array(size_t length, size_t size, void* zero)
+void* array_create(size_t length, size_t size, void* zero)
 {
 	void* array;
 	array = malloc(length * size);
 	if (array == NULL)
 		goto exception_array_bad_alloc;
 
-	fill_array(array, length, size, zero);
+	array_fill(array, length, size, zero);
 	return array;
 
 exception_array_bad_alloc:
 	return NULL;
 }
 
-void fill_array(void* array, size_t length, size_t size, void* value)
+void array_fill(void* array, size_t length, size_t size, void* value)
 {
 	int i;
 	if (value != NULL)
@@ -30,7 +30,7 @@ void fill_array(void* array, size_t length, size_t size, void* value)
 	}
 }
 
-void copy_array(void* src_array, size_t src_length, void* dst_array, size_t dst_length, size_t size)
+void array_copy(void* src_array, size_t src_length, void* dst_array, size_t dst_length, size_t size)
 {
 	int i;
 	for (i = 0; i < src_length && i < dst_length; i++)
@@ -39,7 +39,7 @@ void copy_array(void* src_array, size_t src_length, void* dst_array, size_t dst_
 	}
 }
 
-void clear_array(void* array, size_t length, size_t size, void (*destruct)(void*))
+void array_clear(void* array, size_t length, size_t size, void (*destruct)(void*))
 {
 	int i;
 	if (destruct != NULL)
@@ -51,17 +51,17 @@ void clear_array(void* array, size_t length, size_t size, void (*destruct)(void*
 	}
 }
 
-void get_into_array(void* src_array, size_t src_length, void* dst_array, size_t dst_length, size_t size, void* zero, void (*destruct)(void*))
+void array_get_into(void* src_array, size_t src_length, void* dst_array, size_t dst_length, size_t size, void* zero, void (*destruct)(void*))
 {
-	copy_array(src_array, src_length, dst_array, dst_length, size);
+	array_copy(src_array, src_length, dst_array, dst_length, size);
 	if (dst_length > src_length)
-		fill_array((char*)dst_array + src_length * size, dst_length - src_length, size, zero);
+		array_fill((char*)dst_array + src_length * size, dst_length - src_length, size, zero);
 	else if (src_length > dst_length)
-		clear_array((char*)src_array + dst_length * size, src_length - dst_length, size, destruct);
+		array_clear((char*)src_array + dst_length * size, src_length - dst_length, size, destruct);
 	free(src_array);
 }
 
-int resize_array(void* array, size_t length, size_t new_length, size_t size, void* zero, void (*destruct)(void* elem))
+int array_resize(void* array, size_t length, size_t new_length, size_t size, void* zero, void (*destruct)(void* elem))
 {
 	void* new_array;
 	if (array == NULL)
@@ -69,11 +69,11 @@ int resize_array(void* array, size_t length, size_t new_length, size_t size, voi
 
 	if (new_length != length)
 	{
-		new_array = create_array(new_length, size, NULL);
+		new_array = array_create(new_length, size, NULL);
 		if (new_array == NULL)
 			goto exception_new_array_bad_alloc;
 
-		get_into_array(*((void**)array), length, new_array, new_length, size, zero, destruct);
+		array_get_into(*((void**)array), length, new_array, new_length, size, zero, destruct);
 		*((void**)array) = new_array;
 	}
 	return 1;
@@ -83,8 +83,8 @@ exception_array_null:
 	return 0;
 }
 
-void destroy_array(void* array, size_t length, size_t size, void (*destruct)(void*))
+void array_destroy(void* array, size_t length, size_t size, void (*destruct)(void*))
 {
-	clear_array(array, length, size, destruct);
+	array_clear(array, length, size, destruct);
 	free(array);
 }
