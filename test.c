@@ -6,13 +6,13 @@
 
 void printMap(Map* map);
 
-void printIntArray(int* array, int size)
+void printIntArray(int* array, int length)
 {
 	int i;
 	printf("{");
-	for (i = 0; i < size; i++)
+	for (i = 0; i < length; i++)
 	{
-		printf("%d%s", array[i], (i < size - 1) ? ", " : "}\n");
+		printf("%d%s", array[i], (i < length - 1) ? ", " : "}\n");
 	}
 }
 
@@ -34,11 +34,11 @@ int main(int argc, char* argv[])
 
 	printIntArray(array, 10);
 
-	resizeArray((void**)(&array), 10, 6, sizeof(int), &none, &freeInt);
+	resizeArray(&array, 10, 6, sizeof(int), &none, &freeInt);
 
 	printIntArray(array, 6);
 
-	resizeArray((void**)(&array), 6, 10, sizeof(int), NULL, &freeInt);
+	resizeArray(&array, 6, 10, sizeof(int), NULL, &freeInt);
 
 	printIntArray(array, 10);
 
