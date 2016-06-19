@@ -45,7 +45,7 @@ int resizeArray(void** array, size_t array_size, size_t new_array_size, size_t e
 	{
 		if (i < min(new_array_size, array_size))
 			memcpy((char*)new_array + i * elem_size, (char*)(*array) + i * elem_size, elem_size);
-		else if (i >= array_size)
+		else if (i >= array_size && elem_zero != NULL)
 			memcpy((char*)new_array + i * elem_size, elem_zero, elem_size);
 		else if (i >= new_array_size)
 			(*elem_free)((char*)(*array) + i * elem_size);

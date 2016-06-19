@@ -34,11 +34,11 @@ int main(int argc, char* argv[])
 
 	printIntArray(array, 10);
 
-	resizeArray(&array, 10, 6, sizeof(int), &none, &freeInt);
+	resizeArray((void**)(&array), 10, 6, sizeof(int), &none, &freeInt);
 
 	printIntArray(array, 6);
 
-	resizeArray(&array, 6, 10, sizeof(int), &none, &freeInt);
+	resizeArray((void**)(&array), 6, 10, sizeof(int), NULL, &freeInt);
 
 	printIntArray(array, 10);
 
