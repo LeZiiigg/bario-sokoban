@@ -15,39 +15,42 @@ void freeInt(void* elem);
 
 int main(int argc, char* argv[])
 {
+	int *array, **matrix;
 	int none = -1;
-	int** matrix = createMatrix(4, 4, sizeof(int), &none);
-	printIntMatrix(matrix, 4, 4);
-
 	int i;
-	for (i = 0; i < 16; i++)
-		matrix[i%4][i/4] = i;
-	printIntMatrix(matrix, 4, 4);
 
-	resizeMatrix(&matrix, 4, 4, 6, 3, sizeof(int), &none, freeInt);
-	printIntMatrix(matrix, 6, 3);
+	printf("\nArray tests\n\n");
 
-	resizeMatrix(&matrix, 6, 3, 2, 5, sizeof(int), NULL, freeInt);
-	printIntMatrix(matrix, 2, 5);
-
-	destroyMatrix(matrix, 2, 5, sizeof(int), &freeInt);
-
-	/*int none = -1;
-	int* array = createArray(10, sizeof(int), &none);
+	array = create_array(10, sizeof(int), &none);
 	printIntArray(array, 10);
 
-	int i;
 	for (i = 0; i < 10; i++)
 		array[i] = i;
 	printIntArray(array, 10);
 
-	resizeArray(&array, 10, 6, sizeof(int), &none, &freeInt);
+	resize_array(&array, 10, 6, sizeof(int), &none, &freeInt);
 	printIntArray(array, 6);
 
-	resizeArray(&array, 6, 10, sizeof(int), NULL, &freeInt);
+	resize_array(&array, 6, 10, sizeof(int), NULL, &freeInt);
 	printIntArray(array, 10);
 
-	destroyArray(array, 10);*/
+	printf("\nMatrix tests\n\n");
+
+	matrix = create_matrix(4, 4, sizeof(int), &none);
+	printIntMatrix(matrix, 4, 4);
+
+	for (i = 0; i < 16; i++)
+		matrix[i%4][i/4] = i;
+	printIntMatrix(matrix, 4, 4);
+
+	resize_matrix(&matrix, 4, 4, 6, 3, sizeof(int), &none, freeInt);
+	printIntMatrix(matrix, 6, 3);
+
+	resize_matrix(&matrix, 6, 3, 2, 5, sizeof(int), NULL, freeInt);
+	printIntMatrix(matrix, 2, 5);
+
+	destroy_array(array, 10, sizeof(int), NULL);
+	destroy_matrix(matrix, 2, 5, sizeof(int), NULL);
 
 	/*
 	Map* m = createMap();
@@ -107,7 +110,7 @@ void printMap(Map* map)
 void printIntArray(int* array, int length)
 {
 	int i;
-	printf("{");
+	printf("%p\t{", array);
 	for (i = 0; i < length; i++)
 	{
 		printf("%d", array[i]);
@@ -120,6 +123,7 @@ void printIntArray(int* array, int length)
 void printIntMatrix(int** matrix, int width, int height)
 {
 	int i, j;
+	printf("%p\n", matrix);
 	for (j = 0; j < height; j++)
 	{
 		for (i = 0; i < width; i++)
