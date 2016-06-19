@@ -15,6 +15,7 @@ void free_int(void* elem);
 
 int main(int argc, char* argv[])
 {
+	/*
 	int *array, **matrix;
 	int none = -1;
 	int i;
@@ -50,9 +51,8 @@ int main(int argc, char* argv[])
 	print_int_matrix(matrix, 2, 5);
 
 	array_destroy(array, 10, sizeof(int), NULL);
-	matrix_destroy(matrix, 2, 5, sizeof(int), NULL);
+	matrix_destroy(matrix, 2, 5, sizeof(int), NULL);*/
 
-	/*
 	Map* m = createMap();
 	Tile f = {TILE_FLOOR, TILE_NONE}, w = {TILE_WALL, TILE_NONE};
 	int x, y;
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 	printMap(m);
 
 	setMapSize(m, 5, 3);
-	printMap(m);*/
+	printMap(m);
 	return 0;
 }
 

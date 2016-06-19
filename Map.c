@@ -2,6 +2,13 @@
 #include <stdlib.h>
 
 #include "Map.h"
+#include "array.h"
+#include "matrix.h"
+
+static void freeTileStack(void* tile)
+{
+	free(((TileStack*)tile)->stack);
+}
 
 Map* createMap()
 {
@@ -18,65 +25,26 @@ Map* createMap()
 
 int setMapSize(Map* map, int width, int height)
 {
-	int x, y;
-	if (map != NULL)
+	TileStack empty =
 	{
-		Map old = *map;
-		map->tiles = malloc(width * sizeof(TileStack*));
+		.stack = NULL,
+		.altitude = 0
+	};
+	if (matrix_resize(&map->tiles, map->width, map->height, width, height, sizeof(TileStack), &empty, &freeTileStack))
+	{
 		map->width = width;
 		map->height = height;
-		if (map->tiles == NULL)
-			goto tiles_bad_alloc;
-
-		for (x = 0; x < width; x++)
-		{
-			map->tiles[x] = malloc(height * sizeof(TileStack));
-			if (map->tiles[x] == NULL)
-				goto tiles_x_bad_alloc;
-
-			for (y = 0; y < height; y++)
-			{
-				if (x < old.width && y < old.height)
-				{
-					map->tiles[x][y] = old.tiles[x][y];
-					old.tiles[x][y].stack = NULL;
-				}
-				else
-				{
-					map->tiles[x][y] = (TileStack) {.stack = NULL, .altitude = 0};
-				}
-			}
-		}
-		clearMap(&old);
-		return 1;
-
-		/* Exceptions */
-
-		for (x = width - 1; x >= 0; x--)
-		{
-			for (y = height - 1; y >= 0; y--)
-			{
-				old.tiles[x][y].stack = map->tiles[x][y].stack;
-			}
-			free(map->tiles[x]);
-tiles_x_bad_alloc:
-			;
-		}
-		free(map->tiles);
-
-tiles_bad_alloc:
-		*map = old;
 	}
 	return 0;
 }
 
 int setMapTile(Map* map, int x, int y, int z, Tile* tile)
 {
-	if (isInsideMap(map, x, y) && z >= 0)
+	if (isInsideMap(map, x, y) && z >= 0 && tile != NULL)
 	{
 		if (z >= map->tiles[x][y].altitude)
 		{
-			if (!setMapTileStackSize(map, x, y, z + 1))
+			if (!setMapTileStackAltitude(map, x, y, z + 1))
 				return 0;
 		}
 		map->tiles[x][y].stack[z] = *tile;
@@ -85,32 +53,21 @@ int setMapTile(Map* map, int x, int y, int z, Tile* tile)
 	return 0;
 }
 
-int setMapTileStackSize(Map* map, int x, int y, int size)
+int setMapTileStackAltitude(Map* map, int x, int y, int altitude)
 {
-	int z;
-	if (map != NULL)
+	Tile empty =
 	{
-		TileStack old = map->tiles[x][y];
-		map->tiles[x][y].stack = malloc(size * sizeof(Tile));
-		map->tiles[x][y].altitude = size;
-		if (map->tiles[x][y].stack == NULL)
-			goto stack_bad_alloc;
-
-		for (z = 0; z < size; z++)
+		.geometry = TILE_EMPTY,
+		.orientation = TILE_NONE,
+		.view = NULL
+	};
+	if (isInsideMap(map, x, y))
+	{
+		if (array_resize(&map->tiles[x][y].stack, map->tiles[x][y].altitude, altitude, sizeof(Tile), &empty, NULL))
 		{
-			if (z < old.altitude)
-				map->tiles[x][y].stack[z] = old.stack[z];
-			else
-				map->tiles[x][y].stack[z] = (Tile) {.geometry = TILE_EMPTY, .orientation = TILE_NONE, .view = NULL};
+			map->tiles[x][y].altitude = altitude;
+			return 1;
 		}
-
-		free(old.stack);
-		return 1;
-
-		/* Exceptions */
-
-stack_bad_alloc:
-		map->tiles[x][y] = old;
 	}
 	return 0;
 }
@@ -138,19 +95,7 @@ int isInsideMap(const Map* map, int x, int y)
 
 void clearMap(Map* map)
 {
-	int x, y;
-	if (map != NULL)
-	{
-		for (x = 0; x < map->width; x++)
-		{
-			for (y = 0; y < map->height; y++)
-			{
-				free(map->tiles[x][y].stack);
-			}
-			free(map->tiles[x]);
-		}
-		free(map->tiles);
-	}
+
 }
 
 void destroyMap(Map* map)
