@@ -95,7 +95,7 @@ int isInsideMap(const Map* map, int x, int y)
 
 void clearMap(Map* map)
 {
-
+	matrix_destroy(map->tiles, map->width, map->height, sizeof(TileStack), &freeTileStack);
 }
 
 void destroyMap(Map* map)

@@ -71,6 +71,8 @@ int main(int argc, char* argv[])
 
 	setMapSize(m, 5, 3);
 	printMap(m);
+
+	destroyMap(m);
 	return 0;
 }
 
