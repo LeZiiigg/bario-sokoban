@@ -38,7 +38,7 @@ int setMapSize(Map* map, int width, int height);
 
 int setMapTile(Map* map, int x, int y, int z, Tile* tile);
 
-int setMapTileStackSize(Map* map, int x, int y, int size);
+int setMapTileAltitude(Map* map, int x, int y, int size);
 
 Tile* getMapTile(const Map* map, int x, int y, int z);
 

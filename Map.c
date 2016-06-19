@@ -44,7 +44,7 @@ int setMapTile(Map* map, int x, int y, int z, Tile* tile)
 	{
 		if (z >= map->tiles[x][y].altitude)
 		{
-			if (!setMapTileStackAltitude(map, x, y, z + 1))
+			if (!setMapTileAltitude(map, x, y, z + 1))
 				return 0;
 		}
 		map->tiles[x][y].stack[z] = *tile;
@@ -53,7 +53,7 @@ int setMapTile(Map* map, int x, int y, int z, Tile* tile)
 	return 0;
 }
 
-int setMapTileStackAltitude(Map* map, int x, int y, int altitude)
+int setMapTileAltitude(Map* map, int x, int y, int altitude)
 {
 	Tile empty =
 	{
