@@ -21,12 +21,9 @@ void* matrix_create(size_t width, size_t height, size_t size, void* zero)
 	}
 	return matrix;
 
-	for (i = width - 1; i >= 0; i++)
-	{
-		array_destroy(((void**)matrix)[i], height, size, NULL);
 exception_matrix_i_bad_alloc:
-		;
-	}
+	for (i = i--; i >= 0; i--)
+		array_destroy(((void**)matrix)[i], height, size, NULL);
 	array_destroy(matrix, width, sizeof(void*), NULL);
 
 exception_matrix_bad_alloc:
@@ -52,7 +49,7 @@ int matrix_resize(void* matrix, size_t width, size_t height, size_t new_width, s
 		else if (i < new_width)
 			array_fill(((void**)new_matrix)[i], new_height, size, zero);
 		else if (i < width)
-			array_clear((*(void***)matrix)[i], height, size, destruct);
+			array_destroy((*(void***)matrix)[i], height, size, destruct);
 	}
 	*((void**)matrix) = new_matrix;
 	return 1;
