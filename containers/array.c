@@ -54,10 +54,12 @@ void array_clear(void* array, size_t length, size_t size, void (*destruct)(void*
 void array_get_into(void* src_array, size_t src_length, void* dst_array, size_t dst_length, size_t size, void* zero, void (*destruct)(void*))
 {
 	array_copy(src_array, src_length, dst_array, dst_length, size);
+
 	if (dst_length > src_length)
 		array_fill((char*)dst_array + src_length * size, dst_length - src_length, size, zero);
 	else if (src_length > dst_length)
 		array_clear((char*)src_array + dst_length * size, src_length - dst_length, size, destruct);
+
 	free(src_array);
 }
 

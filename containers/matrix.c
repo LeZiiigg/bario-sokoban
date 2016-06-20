@@ -51,7 +51,7 @@ int matrix_resize(void* matrix, size_t width, size_t height, size_t new_width, s
 		else if (i < width)
 			array_destroy((*(void***)matrix)[i], height, size, destruct);
 	}
-	*((void**)matrix) = new_matrix;
+	*(void**)matrix = new_matrix;
 	return 1;
 
 exception_new_matrix_bad_alloc:
