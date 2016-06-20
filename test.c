@@ -16,7 +16,7 @@ void print_int_array(int* array, int length);
 
 void print_int_matrix(int** matrix, int width, int height);
 
-void print_int_list(struct int_node* head);
+void print_int_list(struct int_node* head, struct int_node* tail);
 
 void free_int(void* integer);
 
@@ -25,11 +25,11 @@ void free_int_node(void* node);
 int main(int argc, char* argv[])
 {
 	int *array, **matrix;
+	struct int_node* list, *tail, one = {1}, two = {2}, three = {3}, four = {4}, five = {5};
 	int none = -1;
 	int i;
 
-	printf("Array tests\n\n");
-
+	/* Array
 	array = array_create(10, sizeof(int), &none);
 	print_int_array(array, 10);
 
@@ -42,9 +42,9 @@ int main(int argc, char* argv[])
 
 	array_resize(&array, 6, 10, sizeof(int), NULL, &free_int);
 	print_int_array(array, 10);
+	//*/
 
-	printf("\nMatrix tests\n\n");
-
+	/* Matrix
 	matrix = matrix_create(4, 4, sizeof(int), &none);
 	print_int_matrix(matrix, 4, 4);
 
@@ -60,7 +60,38 @@ int main(int argc, char* argv[])
 
 	array_destroy(array, 10, sizeof(int), NULL);
 	matrix_destroy(matrix, 2, 5, sizeof(int), NULL);
+	//*/
 
+	//* Linked list
+	printf("next: %d\nprev: %d\n", list_get_member_offset(list, next), list_get_member_offset(list, prev));
+
+	list = NULL;
+	print_int_list(list, NULL);
+
+	list_insert_first(&list, &tail, &one, 4, 8);
+	print_int_list(list, tail);
+
+	list_insert_last(&list, &tail, &three, 4, 8);
+	print_int_list(list, tail);
+
+	list_insert_first(&list, &tail, &two, 4, 8);
+	list_insert(&list, &tail, &three, &five, 4, 8);
+	print_int_list(list, tail);
+
+	list_insert(&list, &tail, &two, &four, 4, 8);
+	print_int_list(list, tail);
+
+	list_remove_first(&list, &tail, 4, 8);
+	print_int_list(list, tail);
+
+	list_remove_last(&list, &tail, 4, 8);
+	print_int_list(list, tail);
+
+	list_remove(&list, &tail, &one, 4, 8);
+	print_int_list(list, tail);
+
+	list_clear(NULL, &tail, 4, 8, &free_int_node);
+	//*/
 	return 0;
 }
 
@@ -91,17 +122,16 @@ void print_int_matrix(int** matrix, int width, int height)
 	}
 }
 
-void print_int_list(struct int_node* head)
+void print_int_list(struct int_node* head, struct int_node* tail)
 {
 	struct int_node* it;
-	printf("%p\t{", head);
+	printf("%p -> ", head);
 	for (it = head; it != NULL; it = it->next)
 	{
 		printf("%d", it->integer);
-		if (it->next != NULL)
-			printf("->");
+		printf(" -> ");
 	}
-	printf("}\n");
+	printf("NULL\n");
 }
 
 void free_int(void* integer)
@@ -112,5 +142,4 @@ void free_int(void* integer)
 void free_int_node(void* node)
 {
 	printf("free(%d)\n", ((struct int_node*)node)->integer);
-	free(node);
 }
