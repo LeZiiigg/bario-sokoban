@@ -15,12 +15,11 @@ void free_int(void* elem);
 
 int main(int argc, char* argv[])
 {
-	/*
 	int *array, **matrix;
 	int none = -1;
 	int i;
 
-	printf("\nArray tests\n\n");
+	printf("Array tests\n\n");
 
 	array = array_create(10, sizeof(int), &none);
 	print_int_array(array, 10);
@@ -51,7 +50,9 @@ int main(int argc, char* argv[])
 	print_int_matrix(matrix, 2, 5);
 
 	array_destroy(array, 10, sizeof(int), NULL);
-	matrix_destroy(matrix, 2, 5, sizeof(int), NULL);*/
+	matrix_destroy(matrix, 2, 5, sizeof(int), NULL);
+
+	printf("\nMap tests\n\n");
 
 	Map* m = createMap();
 	Tile f = {TILE_FLOOR, TILE_NONE}, w = {TILE_WALL, TILE_NONE};
