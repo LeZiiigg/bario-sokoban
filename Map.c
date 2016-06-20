@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 #include "Map.h"
-#include "array.h"
-#include "matrix.h"
+#include "containers/array.h"
+#include "containers/matrix.h"
 
 static void freeTileStack(void* tile)
 {

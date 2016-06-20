@@ -22,7 +22,7 @@ void* matrix_create(size_t width, size_t height, size_t size, void* zero)
 	return matrix;
 
 exception_matrix_i_bad_alloc:
-	for (i = i--; i >= 0; i--)
+	for (i--; i >= 0; i--)
 		array_destroy(((void**)matrix)[i], height, size, NULL);
 	array_destroy(matrix, width, sizeof(void*), NULL);
 

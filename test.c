@@ -1,17 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "array.h"
-#include "matrix.h"
-#include "Map.h"
+#include "containers/array.h"
+#include "containers/matrix.h"
+#include "containers/list.h"
 
-void printMap(Map* map);
+struct int_node
+{
+	int integer;
+	struct int_node* next;
+	struct int_node* prev;
+};
 
 void print_int_array(int* array, int length);
 
 void print_int_matrix(int** matrix, int width, int height);
 
-void free_int(void* elem);
+void print_int_list(struct int_node* head);
+
+void free_int(void* integer);
+
+void free_int_node(void* node);
 
 int main(int argc, char* argv[])
 {
@@ -52,62 +61,7 @@ int main(int argc, char* argv[])
 	array_destroy(array, 10, sizeof(int), NULL);
 	matrix_destroy(matrix, 2, 5, sizeof(int), NULL);
 
-	printf("\nMap tests\n\n");
-
-	Map* m = createMap();
-	Tile f = {TILE_FLOOR, TILE_NONE}, w = {TILE_WALL, TILE_NONE};
-	int x, y;
-
-	setMapSize(m, 4, 4);
-	for (x = 0; x < m->width; x++)
-	{
-		for (y = 0; y < m->height; y++)
-		{
-			setMapTile(m, x, y, 0, &f);
-		}
-	}
-	setMapTile(m, 2, 2, 0, &w);
-	setMapTile(m, 2, 3, 1, &w);
-	printMap(m);
-
-	setMapSize(m, 5, 3);
-	printMap(m);
-
-	destroyMap(m);
 	return 0;
-}
-
-void printMap(Map* map)
-{
-	int x, y, z;
-	for (y = 0; y < map->height; y++)
-	{
-		for (x = 0; x < map->width; x++)
-		{
-			char c = '?';
-			for (z = 0; z < map->tiles[x][y].altitude; z++)
-			{
-				Tile* t = getMapTile(map, x, y, z);
-				switch (t->geometry)
-				{
-				case TILE_FLOOR:
-					c = '.';
-					break;
-				case TILE_WALL:
-					c = '#';
-					break;
-				case TILE_SLOPE:
-					c = '/';
-					break;
-				default:
-					break;
-				}
-			}
-			printf("%c", c);
-		}
-		printf("\n");
-	}
-	printf("\n");
 }
 
 void print_int_array(int* array, int length)
@@ -137,7 +91,26 @@ void print_int_matrix(int** matrix, int width, int height)
 	}
 }
 
+void print_int_list(struct int_node* head)
+{
+	struct int_node* it;
+	printf("%p\t{", head);
+	for (it = head; it != NULL; it = it->next)
+	{
+		printf("%d", it->integer);
+		if (it->next != NULL)
+			printf("->");
+	}
+	printf("}\n");
+}
+
 void free_int(void* integer)
 {
 	printf("free(%d)\n", *((int*)integer));
+}
+
+void free_int_node(void* node)
+{
+	printf("free(%d)\n", ((struct int_node*)node)->integer);
+	free(node);
 }
