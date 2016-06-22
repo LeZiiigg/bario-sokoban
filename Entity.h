@@ -10,6 +10,10 @@ typedef struct
 
 	/* View properties */
 	void* view;
+
+	/* Linked List properties */
+	void* next;
+	void* prev;
 } Entity;
 
 #endif /* __ENTITY_H__ */
