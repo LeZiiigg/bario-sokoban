@@ -32,10 +32,13 @@
 *.dSYM/
 *.su
 
+# TMX files (should be downloaded elsewhere)
+tmx/*
+
 # Codeblocks files
 *.cbp
 *.depend
 *.layout
 
 # Junk files
-./Junk/*
+Junk/*
