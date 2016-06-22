@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 
-/*	To compile it with gcc use:
-*		gcc main.c -o bario-sokoban -lSDL2
-*/
+#include "GamePackage.h"
 
 int main(int argc, char* argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_Window* window = SDL_CreateWindow("Bario Sokoban", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 560, 420, SDL_WINDOW_SHOWN);
+
+	GamePackage* package = loadGamePackage("level.tmx");
 
 	int quit = 0;
 	while (!quit)
@@ -25,6 +25,8 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
+
+	destroyGamePackage(package);
 
 	SDL_DestroyWindow(window);
 	SDL_Quit();
