@@ -34,6 +34,7 @@ int setMapSize(Map* map, int width, int height)
 	{
 		map->width = width;
 		map->height = height;
+		return 1;
 	}
 	return 0;
 }

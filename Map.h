@@ -1,8 +1,8 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
-typedef enum { TILE_EMPTY, TILE_FLOOR, TILE_WALL, TILE_SLOPE } TileGeometry;
-typedef enum { TILE_NONE, TILE_NORTH, TILE_SOUTH, TILE_EAST, TILE_WEST } TileOrientation;
+typedef enum {TILE_EMPTY, TILE_FLOOR, TILE_WALL, TILE_SLOPE} TileGeometry;
+typedef enum {TILE_NONE, TILE_NORTH, TILE_SOUTH, TILE_EAST, TILE_WEST} TileOrientation;
 
 typedef struct
 {
