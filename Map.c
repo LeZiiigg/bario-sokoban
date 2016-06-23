@@ -5,6 +5,12 @@
 #include "containers/array.h"
 #include "containers/matrix.h"
 
+static const Tile empty = {
+	.geometry = TILE_EMPTY,
+	.orientation = TILE_NONE,
+	.view = NULL
+};
+
 static void freeTileStack(void* tile)
 {
 	free(((TileStack*)tile)->stack);
@@ -39,7 +45,7 @@ int setMapSize(Map* map, int width, int height)
 	return 0;
 }
 
-int setMapTile(Map* map, int x, int y, int z, Tile* tile)
+int setMapTile(Map* map, int x, int y, int z, const Tile* tile)
 {
 	if (isInsideMap(map, x, y) && z >= 0 && tile != NULL)
 	{
@@ -56,12 +62,6 @@ int setMapTile(Map* map, int x, int y, int z, Tile* tile)
 
 int setMapTileAltitude(Map* map, int x, int y, int altitude)
 {
-	Tile empty =
-	{
-		.geometry = TILE_EMPTY,
-		.orientation = TILE_NONE,
-		.view = NULL
-	};
 	if (isInsideMap(map, x, y))
 	{
 		if (array_resize(&map->tiles[x][y].stack, map->tiles[x][y].altitude, altitude, sizeof(Tile), &empty, NULL))
@@ -73,7 +73,7 @@ int setMapTileAltitude(Map* map, int x, int y, int altitude)
 	return 0;
 }
 
-Tile* getMapTile(const Map* map, int x, int y, int z)
+const Tile* getMapTile(const Map* map, int x, int y, int z)
 {
 	if (isInsideMap(map, x, y))
 	{
@@ -82,7 +82,7 @@ Tile* getMapTile(const Map* map, int x, int y, int z)
 			return &map->tiles[x][y].stack[z];
 		}
 	}
-	return NULL;
+	return &empty;
 }
 
 int isInsideMap(const Map* map, int x, int y)

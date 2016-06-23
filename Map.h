@@ -36,11 +36,11 @@ Map* createMap();
 
 int setMapSize(Map* map, int width, int height);
 
-int setMapTile(Map* map, int x, int y, int z, Tile* tile);
+int setMapTile(Map* map, int x, int y, int z, const Tile* tile);
 
 int setMapTileAltitude(Map* map, int x, int y, int size);
 
-Tile* getMapTile(const Map* map, int x, int y, int z);
+const Tile* getMapTile(const Map* map, int x, int y, int z);
 
 int isInsideMap(const Map* map, int x, int y);
 
