@@ -1,6 +1,8 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
+#include "tmx/tmx.h"
+
 typedef enum {TILE_EMPTY, TILE_FLOOR, TILE_WALL, TILE_SLOPE} TileGeometry;
 typedef enum {TILE_NONE, TILE_NORTH, TILE_SOUTH, TILE_EAST, TILE_WEST} TileOrientation;
 
@@ -47,5 +49,7 @@ int isInsideMap(const Map* map, int x, int y);
 void clearMap(Map* map);
 
 void destroyMap(Map* map);
+
+Map* loadMapFromTMX(tmx_map* tmx); /* tmx can't be declared as const because of tmx_get_tile... */
 
 #endif /* __MAP_H__ */

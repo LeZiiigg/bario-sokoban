@@ -5,34 +5,6 @@
 #include "containers/list.h"
 #include "tmx/tmx.h"
 
-static int loadGameMap(GamePackage* package, tmx_map* map)
-{
-	int x, y, z;
-	tmx_layer* layer;
-
-	package->map = createMap();
-	if (setMapSize(package->map, map->width, map->height))
-	{
-		for (layer = map->ly_head, z = 0; layer != NULL && layer->type == L_LAYER; layer = layer->next, z++)
-		{
-			for (x = 0; x < map->width; x++)
-			{
-				for (y = 0; y < map->height; y++)
-				{
-					const unsigned int gid = layer->content.gids[x + y * map->width];
-					const tmx_tile* tile = tmx_get_tile(map, gid);
-					if (tile != NULL)
-					{
-						/* TODO: setMapTile(map, x, y, z, ...) */
-					}
-				}
-			}
-		}
-		return 1;
-	}
-	return 0;
-}
-
 static int loadGameEntities(GamePackage* package, tmx_map* map)
 {
 	return 1;
@@ -47,9 +19,9 @@ GamePackage* loadGamePackage(const char* filename)
 		package = malloc(sizeof(GamePackage));
 		if (package != NULL)
 		{
-			package->map = NULL;
+			package->map = loadMapFromTMX(map);
 			package->entities = NULL;
-			if (!loadGameMap(package, map) || !loadGameEntities(package, map))
+			if (!loadGameEntities(package, map))
 			{
 				destroyGamePackage(package);
 				package = NULL;
