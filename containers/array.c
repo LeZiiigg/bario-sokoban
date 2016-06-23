@@ -4,7 +4,7 @@
 
 #include "array.h"
 
-void* array_create(size_t length, size_t size, void* zero)
+void* array_create(size_t length, size_t size, const void* zero)
 {
 	void* array;
 	array = malloc(length * size);
@@ -18,7 +18,7 @@ exception_array_bad_alloc:
 	return NULL;
 }
 
-void array_fill(void* array, size_t length, size_t size, void* value)
+void array_fill(void* array, size_t length, size_t size, const void* value)
 {
 	int i;
 	if (value != NULL)
@@ -51,7 +51,7 @@ void array_clear(void* array, size_t length, size_t size, void (*destruct)(void*
 	}
 }
 
-void array_get_into(void* src_array, size_t src_length, void* dst_array, size_t dst_length, size_t size, void* zero, void (*destruct)(void*))
+void array_get_into(void* src_array, size_t src_length, void* dst_array, size_t dst_length, size_t size, const void* zero, void (*destruct)(void*))
 {
 	array_copy(src_array, src_length, dst_array, dst_length, size);
 
@@ -63,7 +63,7 @@ void array_get_into(void* src_array, size_t src_length, void* dst_array, size_t 
 	free(src_array);
 }
 
-int array_resize(void* array, size_t length, size_t new_length, size_t size, void* zero, void (*destruct)(void* elem))
+int array_resize(void* array, size_t length, size_t new_length, size_t size, const void* zero, void (*destruct)(void* elem))
 {
 	void* new_array;
 	if (array == NULL)

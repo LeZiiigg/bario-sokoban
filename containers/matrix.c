@@ -4,7 +4,7 @@
 #include "matrix.h"
 #include "array.h"
 
-void* matrix_create(size_t width, size_t height, size_t size, void* zero)
+void* matrix_create(size_t width, size_t height, size_t size, const void* zero)
 {
 	void* matrix;
 	int i;
@@ -30,7 +30,7 @@ exception_matrix_bad_alloc:
 	return NULL;
 }
 
-int matrix_resize(void* matrix, size_t width, size_t height, size_t new_width, size_t new_height, size_t size, void* zero, void (*destruct)(void*))
+int matrix_resize(void* matrix, size_t width, size_t height, size_t new_width, size_t new_height, size_t size, const void* zero, void (*destruct)(void*))
 {
 	void* new_matrix;
 	int i;
